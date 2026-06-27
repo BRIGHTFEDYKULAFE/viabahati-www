@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Via Bahati — Africa's Logistics Intelligence Infrastructure</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#04080a;
+  --bg2:#060d0f;
+  --bg3:#0a1518;
+  --green:#00C47E;
+  --green2:#00a066;
+  --green3:rgba(0,196,126,0.08);
+  --text:#e8eaed;
+  --muted:#7a8a8f;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(0,196,126,0.2);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,Arial,sans-serif;line-height:1.6;overflow-x:hidden;}
+
+/* STATUS BAR */
+.status-bar{background:rgba(0,196,126,0.06);border-bottom:1px solid var(--border2);padding:0.5rem 5%;display:flex;align-items:center;justify-content:center;gap:2rem;font-size:0.78rem;color:var(--muted);}
+.status-live{display:flex;align-items:center;gap:0.5rem;color:var(--green);}
+.status-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+.status-stat{color:var(--text);}
+.status-stat span{color:var(--green);font-weight:600;}
+
+/* NAV */
+nav{position:fixed;top:32px;left:0;right:0;z-index:100;padding:0 5%;}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;background:rgba(4,8,10,0.85);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:14px;padding:0 1.5rem;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;}
+.logo-mark svg{width:18px;height:18px;}
+.logo-text{font-weight:700;font-size:0.95rem;letter-spacing:0.04em;color:#fff;}
+.logo-sub{font-size:0.65rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+.nav-links{display:flex;align-items:center;gap:1.75rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;}
+.nav-links a:hover{color:#fff;}
+.nav-cta{background:var(--green);color:#000;padding:0.5rem 1.25rem;border-radius:8px;font-weight:700;font-size:0.85rem;text-decoration:none;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:160px 5% 80px;text-align:center;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(0,196,126,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(0,196,126,0.08);border:1px solid rgba(0,196,126,0.25);border-radius:100px;padding:0.4rem 1rem;font-size:0.78rem;color:var(--green);margin-bottom:2rem;}
+.hero h1{font-size:clamp(2.8rem,6vw,5.5rem);font-weight:800;line-height:1.08;letter-spacing:-0.02em;color:#fff;max-width:900px;margin-bottom:1.5rem;}
+.hero h1 em{color:var(--green);font-style:normal;}
+.hero-sub{font-size:clamp(1rem,1.5vw,1.2rem);color:var(--muted);max-width:680px;line-height:1.8;margin-bottom:2.5rem;}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem;}
+.btn-primary{background:var(--green);color:#000;padding:0.9rem 2.25rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;transition:background 0.2s,transform 0.15s;}
+.btn-primary:hover{background:var(--green2);transform:translateY(-1px);}
+.btn-outline{background:transparent;color:#fff;padding:0.9rem 2.25rem;border-radius:10px;font-weight:600;font-size:1rem;text-decoration:none;border:1px solid rgba(255,255,255,0.15);transition:border-color 0.2s;}
+.btn-outline:hover{border-color:var(--green);}
+
+/* HERO STATS */
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;max-width:800px;width:100%;}
+.hero-stat{background:var(--bg2);padding:1.25rem;text-align:center;}
+.hero-stat-num{font-size:2rem;font-weight:800;color:var(--green);line-height:1;}
+.hero-stat-label{font-size:0.75rem;color:var(--muted);margin-top:0.35rem;}
+
+/* SECTIONS */
+section{padding:100px 5%;}
+.sec{max-width:1280px;margin:0 auto;}
+.sec-tag{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);margin-bottom:0.75rem;}
+h2{font-size:clamp(2rem,3.5vw,3rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-0.01em;margin-bottom:1rem;}
+.sec-sub{font-size:1.05rem;color:var(--muted);max-width:620px;line-height:1.8;margin-bottom:3rem;}
+.divider{border:none;border-top:1px solid var(--border);margin:0;}
+
+/* PROBLEM */
+.problem-section{background:var(--bg);}
+.problem-statement{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:700;color:#fff;line-height:1.4;max-width:800px;margin:0 auto 3rem;text-align:center;}
+.problem-statement em{color:var(--green);font-style:normal;}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;}
+.problem-col{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;}
+.problem-col-title{font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;}
+.problem-col-title.bad{color:#f87171;}
+.problem-col-title.result{color:var(--green);}
+.problem-item{display:flex;align-items:flex-start;gap:0.75rem;padding:0.6rem 0;font-size:0.9rem;color:var(--muted);border-bottom:1px solid var(--border);}
+.problem-item:last-child{border-bottom:none;}
+.problem-item-icon{flex-shrink:0;margin-top:0.15rem;font-size:1rem;}
+
+/* SOLUTION */
+.solution-section{background:var(--bg2);}
+.solution-headline{font-size:clamp(1.2rem,2vw,1.5rem);color:var(--muted);max-width:800px;line-height:1.8;margin-bottom:1.5rem;}
+.solution-tagline{font-size:1.5rem;font-weight:700;color:#fff;border-left:3px solid var(--green);padding-left:1.25rem;margin-bottom:3rem;}
+
+/* MODULES ORBIT */
+.modules-visual{position:relative;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3rem;overflow:hidden;}
+.modules-center{text-align:center;margin-bottom:2.5rem;}
+.modules-badge{display:inline-block;background:var(--green);color:#000;font-weight:800;font-size:1.1rem;padding:0.75rem 2rem;border-radius:100px;margin-bottom:0.5rem;}
+.modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.875rem;}
+.module-pill{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:0.875rem 1rem;display:flex;align-items:center;gap:0.75rem;transition:border-color 0.2s;}
+.module-pill:hover{border-color:rgba(0,196,126,0.4);}
+.module-pill-icon{font-size:1.1rem;flex-shrink:0;}
+.module-pill-text{font-size:0.83rem;font-weight:500;color:var(--text);}
+
+/* ARCHITECTURE */
+.arch-section{background:var(--bg);}
+.arch-diagram{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:3rem;overflow:hidden;}
+.arch-row{display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem;}
+.arch-arrow{color:var(--muted);font-size:1.25rem;text-align:center;margin:0.5rem 0;}
+.arch-node{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.6rem 1.1rem;font-size:0.82rem;color:var(--text);white-space:nowrap;}
+.arch-node.source{border-color:rgba(59,130,246,0.3);color:#93c5fd;}
+.arch-node.core{background:rgba(0,196,126,0.1);border-color:rgba(0,196,126,0.4);color:var(--green);font-weight:700;font-size:1rem;padding:1rem 2.5rem;border-radius:14px;}
+.arch-node.output{border-color:rgba(168,85,247,0.3);color:#c4b5fd;}
+.arch-label{font-size:0.7rem;color:var(--muted);text-align:center;margin-bottom:0.75rem;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* INDUSTRY */
+.industry-section{background:var(--bg2);}
+.industry-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;}
+.industry-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.75rem;transition:border-color 0.2s,transform 0.2s;}
+.industry-card:hover{border-color:rgba(0,196,126,0.3);transform:translateY(-2px);}
+.industry-icon{font-size:2rem;margin-bottom:1rem;}
+.industry-card h3{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:1rem;}
+.industry-feature{font-size:0.82rem;color:var(--muted);padding:0.4rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.5rem;}
+.industry-feature:last-child{border-bottom:none;}
+.industry-feature::before{content:'→';color:var(--green);font-size:0.75rem;}
+
+/* GLI */
+.gli-section{background:var(--bg);}
+.gli-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.gli-report{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden;}
+.gli-report::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(0,196,126,0.08) 0%,transparent 70%);pointer-events:none;}
+.gli-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;}
+.gli-title-block .gli-name{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:0.2rem;}
+.gli-title-block .gli-edition{font-size:0.8rem;color:var(--muted);}
+.gli-score-block{text-align:right;}
+.gli-score-num{font-size:3rem;font-weight:800;color:#fbbf24;line-height:1;}
+.gli-score-label{font-size:0.72rem;color:#fbbf24;opacity:0.8;}
+.gli-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1.5rem;}
+.gli-metric{background:var(--bg3);border-radius:10px;padding:0.875rem;text-align:center;}
+.gli-metric-val{font-size:1.4rem;font-weight:800;}
+.gli-metric-val.red{color:#f87171;}
+.gli-metric-val.yellow{color:#fbbf24;}
+.gli-metric-val.green{color:var(--green);}
+.gli-metric-lbl{font-size:0.68rem;color:var(--muted);margin-top:0.2rem;}
+.gli-summary{font-size:0.82rem;color:var(--muted);line-height:1.7;border-top:1px solid var(--border);padding-top:1.25rem;}
+.gli-summary strong{color:var(--text);}
+.gli-corridors{margin-top:1.25rem;}
+.gli-corridor{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;}
+.gli-corridor:last-child{border-bottom:none;}
+.risk-pill{padding:0.2rem 0.6rem;border-radius:5px;font-size:0.72rem;font-weight:700;}
+.rh{background:rgba(239,68,68,0.12);color:#f87171;}
+.rm{background:rgba(251,191,36,0.12);color:#fbbf24;}
+.rl{background:rgba(0,196,126,0.12);color:var(--green);}
+
+/* VB SCORE */
+.score-section{background:var(--bg2);}
+.score-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.score-visual{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2.5rem;}
+.score-dial{text-align:center;margin-bottom:2rem;}
+.score-num{font-size:5rem;font-weight:800;color:var(--green);line-height:1;}
+.score-label{font-size:0.8rem;color:var(--muted);margin-top:0.25rem;}
+.score-bar{background:rgba(255,255,255,0.06);border-radius:100px;height:8px;margin-bottom:1.5rem;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#f87171 0%,#fbbf24 40%,var(--green) 70%);}
+.score-inputs{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.score-input{display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:var(--muted);}
+.score-input::before{content:'✓';color:var(--green);font-weight:700;font-size:0.85rem;}
+.score-outputs{display:flex;gap:0.75rem;margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.score-output{flex:1;background:var(--bg2);border-radius:10px;padding:0.875rem;text-align:center;font-size:0.8rem;color:var(--muted);}
+
+/* SCREENSHOTS */
+.screenshots-section{background:var(--bg);}
+.screenshots-tabs{display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.tab-btn{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 1rem;font-size:0.82rem;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.tab-btn.active,.tab-btn:hover{border-color:var(--green);color:var(--green);}
+.screenshot-frame{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.screenshot-bar{background:var(--bg3);padding:0.875rem 1.25rem;display:flex;align-items:center;gap:0.75rem;border-bottom:1px solid var(--border);}
+.screenshot-dot{width:10px;height:10px;border-radius:50%;}
+.screenshot-url{flex:1;background:rgba(255,255,255,0.04);border-radius:6px;padding:0.3rem 0.875rem;font-size:0.75rem;color:var(--muted);}
+.screenshot-img{width:100%;display:block;}
+
+/* FLYWHEEL */
+.flywheel-section{background:var(--bg2);}
+.flywheel-diagram{display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:center;max-width:900px;margin:0 auto;}
+.flywheel-col{display:flex;flex-direction:column;gap:1rem;}
+.flywheel-node{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem;}
+.flywheel-node h4{font-size:0.9rem;font-weight:600;color:#fff;margin-bottom:0.25rem;}
+.flywheel-node p{font-size:0.78rem;color:var(--muted);}
+.flywheel-center{background:rgba(0,196,126,0.08);border:2px solid rgba(0,196,126,0.4);border-radius:50%;width:160px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex-shrink:0;}
+.flywheel-center-icon{font-size:2rem;margin-bottom:0.5rem;}
+.flywheel-center-text{font-size:0.75rem;font-weight:700;color:var(--green);letter-spacing:0.05em;text-transform:uppercase;}
+
+/* ECOSYSTEM */
+.ecosystem-section{background:var(--bg);}
+.ecosystem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.ecosystem-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;}
+.ecosystem-card-type{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;}
+.ecosystem-card h4{font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+.ecosystem-card p{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+
+/* SECURITY */
+.security-section{background:var(--bg2);}
+.security-layers{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;}
+.security-layer{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;}
+.security-layer-label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;}
+.security-layer h4{font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+.security-check{display:flex;align-items:center;gap:0.625rem;font-size:0.83rem;color:var(--muted);padding:0.35rem 0;}
+.security-check::before{content:'✓';color:var(--green);font-weight:700;}
+
+/* PRICING */
+.pricing-section{background:var(--bg);}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.pricing-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:2.25rem;position:relative;}
+.pricing-card.featured{border-color:rgba(0,196,126,0.5);background:rgba(0,196,126,0.04);}
+.pricing-popular{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:#000;font-size:0.72rem;font-weight:800;padding:0.3rem 1rem;border-radius:100px;white-space:nowrap;}
+.pricing-plan{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;}
+.pricing-price{font-size:2.75rem;font-weight:800;color:#fff;line-height:1;}
+.pricing-price span{font-size:1rem;font-weight:400;color:var(--muted);}
+.pricing-desc{font-size:0.85rem;color:var(--muted);margin:0.75rem 0 1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.pricing-feature{display:flex;align-items:flex-start;gap:0.625rem;padding:0.4rem 0;font-size:0.83rem;color:var(--text);}
+.pricing-feature::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:0.05rem;}
+.pricing-cta{display:block;text-align:center;padding:0.9rem;border-radius:10px;font-weight:700;font-size:0.9rem;text-decoration:none;margin-top:1.75rem;}
+.pricing-cta-outline{border:1px solid rgba(255,255,255,0.15);color:#fff;transition:border-color 0.2s;}
+.pricing-cta-outline:hover{border-color:var(--green);}
+.pricing-cta-fill{background:var(--green);color:#000;}
+
+/* DEMO */
+.demo-section{background:var(--bg2);text-align:center;}
+.demo-inner{max-width:680px;margin:0 auto;}
+.demo-form{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2.5rem;margin-top:3rem;text-align:left;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg2);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.875rem 1rem;color:#fff;font-size:0.9rem;outline:none;font-family:inherit;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green);}
+.form-group select option{background:#060d0f;}
+.form-group textarea{min-height:90px;resize:vertical;}
+.form-submit{width:100%;background:var(--green);color:#000;border:none;border-radius:10px;padding:1.1rem;font-size:1rem;font-weight:800;cursor:pointer;}
+.form-success{display:none;background:rgba(0,196,126,0.08);border:1px solid rgba(0,196,126,0.3);border-radius:10px;padding:1.5rem;text-align:center;color:var(--green);font-size:0.95rem;}
+
+/* FOOTER */
+footer{background:var(--bg3);border-top:1px solid var(--border);padding:4rem 5% 2rem;}
+.footer-top{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer-brand p{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-top:0.75rem;max-width:280px;}
+.footer-col h5{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.footer-col a{display:block;color:var(--muted);text-decoration:none;font-size:0.85rem;margin-bottom:0.5rem;transition:color 0.2s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{max-width:1280px;margin:0 auto;border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:var(--muted);}
+.footer-bottom a{color:var(--muted);text-decoration:none;}
+
+/* CORRIDOR MAP */
+.map-section{background:var(--bg);}
+.corridor-map{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden;}
+.map-legend{display:flex;gap:1.5rem;margin-bottom:1.5rem;font-size:0.78rem;}
+.map-legend-item{display:flex;align-items:center;gap:0.5rem;color:var(--muted);}
+.legend-dot{width:10px;height:10px;border-radius:50%;}
+
+@media(max-width:900px){
+  .problem-grid,.gli-inner,.score-inner,.flywheel-diagram{grid-template-columns:1fr;}
+  .industry-grid,.modules-grid{grid-template-columns:1fr 1fr;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .ecosystem-grid{grid-template-columns:1fr 1fr;}
+  .security-layers{grid-template-columns:1fr;}
+  nav{top:0;padding:0;}
+  .nav-inner{border-radius:0;border-left:none;border-right:none;border-top:none;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="status-live"><span class="status-dot"></span> Platform operational</div>
+  <div>Active corridors: <span class="status-stat"><span>6</span></span></div>
+  <div>Shipments monitored: <span class="status-stat"><span>6</span></span></div>
+  <div>Network health: <span class="status-stat"><span>64/100</span></span></div>
+  <div>Last updated: <span class="status-stat"><span>just now</span></span></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 2L15.5 6V12L9 16L2.5 12V6L9 2Z" fill="#000" stroke="#000" stroke-width="0.5"/>
+          <path d="M9 5L12.5 7.5V12.5L9 15L5.5 12.5V7.5L9 5Z" fill="#00C47E"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">VIA BAHATI</div>
+        <div class="logo-sub">Logistics OS</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#problem">The Problem</a>
+      <a href="#platform">Platform</a>
+      <a href="#gli">Intelligence</a>
+      <a href="#industries">Industries</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#demo" class="nav-cta">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag"><span class="status-dot"></span> Now live across Ghana · June 2026</div>
+  <h1>Africa's Logistics <em>Intelligence Infrastructure</em></h1>
+  <p class="hero-sub">Via Bahati transforms fragmented logistics operations into a connected intelligence network — giving logistics companies real-time visibility, banks the data to fund trade confidently, and governments a live view of national supply chains.</p>
+  <div class="hero-actions">
+    <a href="#demo" class="btn-primary">Request a Demo</a>
+    <a href="#platform" class="btn-outline">Explore the Platform</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num" id="c1">6</div>
+      <div class="hero-stat-label">Active corridors</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">10</div>
+      <div class="hero-stat-label">Platform modules</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">64</div>
+      <div class="hero-stat-label">Network health index</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">$150K</div>
+      <div class="hero-stat-label">Pre-seed raise open</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- PROBLEM -->
+<section class="problem-section" id="problem">
+  <div class="sec">
+    <div class="sec-tag">The Problem</div>
+    <div class="problem-statement">Logistics moves economies. Yet most logistics decisions across Africa are still made <em>without complete information.</em></div>
+    <p style="color:var(--muted);text-align:center;max-width:700px;margin:0 auto 3rem;line-height:1.8;">Thousands of shipments move every day between ports, warehouses, factories, and customers. Each movement creates valuable data — but that information is scattered across spreadsheets, WhatsApp messages, paper documents, and disconnected systems.</p>
+    <div class="problem-grid">
+      <div class="problem-col">
+        <div class="problem-col-title bad">❌ Today's reality</div>
+        <div class="problem-item"><span class="problem-item-icon">📋</span>Logistics companies manage fleets with spreadsheets and phone calls</div>
+        <div class="problem-item"><span class="problem-item-icon">🏦</span>Banks finance cargo without operational visibility into risk</div>
+        <div class="problem-item"><span class="problem-item-icon">⚠️</span>Delays are discovered only when they become crises</div>
+        <div class="problem-item"><span class="problem-item-icon">📊</span>Insurers price cargo risk with incomplete route data</div>
+        <div class="problem-item"><span class="problem-item-icon">🏛️</span>Governments lack a live view of national logistics health</div>
+        <div class="problem-item"><span class="problem-item-icon">🔗</span>Every operator works in isolation from the network</div>
+      </div>
+      <div class="problem-col">
+        <div class="problem-col-title result">→ The consequences</div>
+        <div class="problem-item"><span class="problem-item-icon">💸</span>Higher operational costs across every corridor</div>
+        <div class="problem-item"><span class="problem-item-icon">⏱️</span>Delayed deliveries that compound into supply chain failures</div>
+        <div class="problem-item"><span class="problem-item-icon">❌</span>Reliable transport businesses can't access trade finance</div>
+        <div class="problem-item"><span class="problem-item-icon">📈</span>Insurance premiums based on guesswork, not data</div>
+        <div class="problem-item"><span class="problem-item-icon">🌍</span>Trade growth constrained by invisible infrastructure gaps</div>
+        <div class="problem-item"><span class="problem-item-icon">🤝</span>Development finance misallocated without corridor intelligence</div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:1.1rem;color:var(--muted);font-style:italic;">The challenge is not the absence of data. The challenge is transforming that data into intelligence people can trust and act on.</p>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SOLUTION -->
+<section class="solution-section" id="platform">
+  <div class="sec">
+    <div class="sec-tag">Our Solution</div>
+    <h2>Introducing Via Bahati</h2>
+    <p class="solution-headline">Via Bahati is an AI-powered Logistics Intelligence Platform built to connect every part of the logistics ecosystem into a single operational intelligence network. Rather than replacing existing processes, Via Bahati continuously collects operational signals and transforms them into real-time intelligence that supports better decisions.</p>
+    <div class="solution-tagline">One connected platform. One source of operational truth. One intelligence layer for African logistics.</div>
+    <div class="modules-visual">
+      <div class="modules-center">
+        <div class="modules-badge">Via Bahati Intelligence Cloud</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;">10 integrated modules. One operating system.</p>
+      </div>
+      <div class="modules-grid">
+        <div class="module-pill"><span class="module-pill-icon">🗼</span><span class="module-pill-text">Live Control Tower</span></div>
+        <div class="module-pill"><span class="module-pill-icon">📦</span><span class="module-pill-text">Shipment 360°</span></div>
+        <div class="module-pill"><span class="module-pill-icon">🧠</span><span class="module-pill-text">Route Intelligence</span></div>
+        <div class="module-pill"><span class="module-pill-icon">👤</span><span class="module-pill-text">Driver Management</span></div>
+        <div class="module-pill"><span class="module-pill-icon">🚛</span><span class="module-pill-text">Asset Intelligence</span></div>
+        <div class="module-pill"><span class="module-pill-icon">💳</span><span class="module-pill-text">Finance Engine</span></div>
+        <div class="module-pill"><span class="module-pill-icon">📊</span><span class="module-pill-text">Benchmarking Engine</span></div>
+        <div class="module-pill"><span class="module-pill-icon">🌿</span><span class="module-pill-text">Sustainability Layer</span></div>
+        <div class="module-pill"><span class="module-pill-icon">⚡</span><span class="module-pill-text">Automation & Decisions</span></div>
+        <div class="module-pill"><span class="module-pill-icon">🔗</span><span class="module-pill-text">API Platform</span></div>
+        <div class="module-pill"><span class="module-pill-icon">🌐</span><span class="module-pill-text">Network Intelligence</span></div>
+        <div class="module-pill"><span class="module-pill-icon">🏪</span><span class="module-pill-text">Customer Portal</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ARCHITECTURE -->
+<section class="arch-section">
+  <div class="sec">
+    <div class="sec-tag">How it works</div>
+    <h2>Every signal. One intelligence layer.</h2>
+    <p class="sec-sub">Via Bahati ingests operational data from every point in the logistics chain, processes it through an AI intelligence cloud, and delivers actionable outputs to every stakeholder.</p>
+    <div class="arch-diagram">
+      <div class="arch-label">Data sources</div>
+      <div class="arch-row">
+        <div class="arch-node source">GPS tracking</div>
+        <div class="arch-node source">WhatsApp / SMS</div>
+        <div class="arch-node source">Driver inputs</div>
+        <div class="arch-node source">ERP systems</div>
+        <div class="arch-node source">Excel uploads</div>
+        <div class="arch-node source">IoT sensors</div>
+      </div>
+      <div class="arch-arrow" style="font-size:2rem;color:var(--green);">↓</div>
+      <div class="arch-row">
+        <div class="arch-node core">Via Bahati Intelligence Cloud</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin:0.5rem 0;text-align:center;">
+        <div style="font-size:0.75rem;color:var(--muted);">AI Risk Engine</div>
+        <div style="font-size:0.75rem;color:var(--muted);">Trust Scores</div>
+        <div style="font-size:0.75rem;color:var(--muted);">Knowledge Graph</div>
+        <div style="font-size:0.75rem;color:var(--muted);">GLI Generator</div>
+      </div>
+      <div class="arch-arrow" style="font-size:2rem;color:var(--green);">↓</div>
+      <div class="arch-label">Intelligence outputs</div>
+      <div class="arch-row">
+        <div class="arch-node output">Logistics operators</div>
+        <div class="arch-node output">Banks & trade finance</div>
+        <div class="arch-node output">Insurers</div>
+        <div class="arch-node output">Manufacturers</div>
+        <div class="arch-node output">Government</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- LIVE PLATFORM SCREENSHOTS -->
+<section class="screenshots-section">
+  <div class="sec">
+    <div class="sec-tag">Live platform</div>
+    <h2>Not a mockup. Not a demo. Live.</h2>
+    <p class="sec-sub">Every screen below is the actual Via Bahati platform running in production. Real data. Real intelligence. Real Ghana corridors.</p>
+    <div class="screenshots-tabs">
+      <button class="tab-btn active" onclick="showScreen('dashboard',this)">Dashboard</button>
+      <button class="tab-btn" onclick="showScreen('tower',this)">Control Tower</button>
+      <button class="tab-btn" onclick="showScreen('shipment',this)">Shipment 360°</button>
+      <button class="tab-btn" onclick="showScreen('gli',this)">GLI Report</button>
+      <button class="tab-btn" onclick="showScreen('finance',this)">Finance Engine</button>
+      <button class="tab-btn" onclick="showScreen('portal',this)">Customer Portal</button>
+    </div>
+    <div class="screenshot-frame">
+      <div class="screenshot-bar">
+        <div class="screenshot-dot" style="background:#f87171;"></div>
+        <div class="screenshot-dot" style="background:#fbbf24;"></div>
+        <div class="screenshot-dot" style="background:#34d399;"></div>
+        <div class="screenshot-url" id="screenshot-url">viabahati.app · Operations Overview</div>
+      </div>
+      <img id="screen-dashboard" class="screenshot-img" src="Screenshot_2026-06-27_001442.png" alt="Via Bahati Dashboard — Operations Overview showing 6 active shipments, 50% on-time rate, live alerts"/>
+      <img id="screen-tower" class="screenshot-img" style="display:none" src="Screenshot_2026-06-27_001511.png" alt="Via Bahati Live Control Tower — Ghana map with shipment positions and risk levels"/>
+      <img id="screen-shipment" class="screenshot-img" style="display:none" src="Screenshot_2026-06-27_001727.png" alt="Via Bahati Shipment 360 — KW-001 Tema Port to Kumasi at-risk shipment profile"/>
+      <img id="screen-gli" class="screenshot-img" style="display:none" src="Screenshot_2026-06-27_001909.png" alt="Via Bahati Ghana Logistics Intelligence Index — June 2026 edition with AI executive summary"/>
+      <img id="screen-finance" class="screenshot-img" style="display:none" src="Screenshot_2026-06-27_002048.png" alt="Via Bahati Finance Engine — Financial Intelligence with credit scoring and risk assessment"/>
+      <img id="screen-portal" class="screenshot-img" style="display:none" src="Screenshot_2026-06-27_002116.png" alt="Northern Haulage white-label portal — powered by Via Bahati"/>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- GLI SECTION -->
+<section class="gli-section" id="gli">
+  <div class="sec">
+    <div class="gli-inner">
+      <div>
+        <div class="sec-tag">Ghana Logistics Intelligence Index</div>
+        <h2>The monthly pulse of Ghana's freight network</h2>
+        <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">Every month, Via Bahati publishes the GLI — an AI-generated executive report on Ghana's logistics network performance. Written in the style of The Economist. Grounded in live shipment data. Designed for trade finance committees, logistics boards, and government policymakers.</p>
+        <ul style="list-style:none;margin-bottom:2rem;">
+          <li style="display:flex;gap:0.75rem;padding:0.5rem 0;font-size:0.9rem;color:var(--muted);"><span style="color:var(--green);font-weight:700;">✓</span> Corridor-by-corridor risk analysis with real data</li>
+          <li style="display:flex;gap:0.75rem;padding:0.5rem 0;font-size:0.9rem;color:var(--muted);"><span style="color:var(--green);font-weight:700;">✓</span> Carrier reliability rankings across active routes</li>
+          <li style="display:flex;gap:0.75rem;padding:0.5rem 0;font-size:0.9rem;color:var(--muted);"><span style="color:var(--green);font-weight:700;">✓</span> Network Health Index with trend analysis</li>
+          <li style="display:flex;gap:0.75rem;padding:0.5rem 0;font-size:0.9rem;color:var(--muted);"><span style="color:var(--green);font-weight:700;">✓</span> AI executive summary — specific, actionable, data-driven</li>
+          <li style="display:flex;gap:0.75rem;padding:0.5rem 0;font-size:0.9rem;color:var(--muted);"><span style="color:var(--green);font-weight:700;">✓</span> Monthly cadence — always current, never stale</li>
+        </ul>
+        <a href="#demo" class="btn-primary">Request the June 2026 Report</a>
+      </div>
+      <div class="gli-report">
+        <div class="gli-header">
+          <div class="gli-title-block">
+            <div class="gli-name">Ghana Logistics Intelligence Index</div>
+            <div class="gli-edition">June 2026 · Published by Via Bahati</div>
+          </div>
+          <div class="gli-score-block">
+            <div class="gli-score-num">64</div>
+            <div class="gli-score-label">Under Stress</div>
+          </div>
+        </div>
+        <div class="gli-metrics">
+          <div class="gli-metric"><div class="gli-metric-val red">33%</div><div class="gli-metric-lbl">On-time rate</div></div>
+          <div class="gli-metric"><div class="gli-metric-val yellow">1</div><div class="gli-metric-lbl">At-risk shipments</div></div>
+          <div class="gli-metric"><div class="gli-metric-val green">100%</div><div class="gli-metric-lbl">Resolution rate</div></div>
+        </div>
+        <div class="gli-summary">
+          <strong>AI Executive Summary — Generated by Claude</strong><br/><br/>
+          Ghana's freight network posted a troubling performance in June 2026, with an on-time delivery rate of just 33%. The Tema Port to Kumasi corridor emerges as the single most compromised lane in the network, carrying an average risk score of 82 and a 100% delay rate. The Takoradi to Accra coastal route performed comparatively well, with a risk score of 23 and no delays — suggesting coastal trunk routes benefit from better infrastructure density than inland arteries pushing northward...
+        </div>
+        <div class="gli-corridors">
+          <div class="gli-corridor"><span>Tema Port → Kumasi</span><span class="risk-pill rh">Risk 82</span></div>
+          <div class="gli-corridor"><span>Kumasi → Tamale</span><span class="risk-pill rh">Risk 80</span></div>
+          <div class="gli-corridor"><span>Accra → Takoradi</span><span class="risk-pill rm">Risk 12</span></div>
+          <div class="gli-corridor"><span>Takoradi → Accra</span><span class="risk-pill rl">Risk 23</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- VB SCORE -->
+<section class="score-section" id="score">
+  <div class="sec">
+    <div class="score-inner">
+      <div>
+        <div class="sec-tag">Proprietary IP</div>
+        <h2>The Via Bahati Score™</h2>
+        <p style="color:var(--muted);line-height:1.8;margin-bottom:1.5rem;">Every shipment contributes to an evolving intelligence profile. The Via Bahati Score™ is a proprietary credit and operational reliability rating built entirely from logistics data — not financial proxies.</p>
+        <p style="color:var(--muted);line-height:1.8;margin-bottom:2rem;">Banks use it to assess trade finance applications. Insurers use it to price cargo risk. Customers use it to choose reliable carriers. Over time, it becomes Africa's most authoritative logistics credit intelligence layer.</p>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:1.5rem;">
+          <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Score inputs</div>
+          <div class="score-inputs">
+            <div class="score-input">Delivery reliability</div>
+            <div class="score-input">On-time performance</div>
+            <div class="score-input">Route exposure</div>
+            <div class="score-input">Incident history</div>
+            <div class="score-input">Compliance record</div>
+            <div class="score-input">Operational behaviour</div>
+          </div>
+        </div>
+      </div>
+      <div class="score-visual">
+        <div class="score-dial">
+          <div class="score-num">34</div>
+          <div class="score-label">Northern Haulage · Credit Score / 100</div>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:34%;"></div></div>
+        <p style="font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:1.5rem;">Score reflects one active at-risk shipment on high-risk corridor. Improves as operational data accumulates.</p>
+        <div style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;">Score consumers</div>
+        <div class="score-outputs">
+          <div class="score-output">Banks<br/><span style="color:var(--green);font-weight:600;">Trade finance</span></div>
+          <div class="score-output">Insurers<br/><span style="color:var(--green);font-weight:600;">Cargo risk</span></div>
+          <div class="score-output">Customers<br/><span style="color:var(--green);font-weight:600;">Carrier selection</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- INDUSTRIES -->
+<section class="industry-section" id="industries">
+  <div class="sec">
+    <div class="sec-tag">Industry solutions</div>
+    <h2>Built for every stakeholder in the trade ecosystem</h2>
+    <p class="sec-sub">Via Bahati speaks to four distinct audiences — each with a different use case, each with a different lens on the same intelligence network.</p>
+    <div class="industry-grid">
+      <div class="industry-card">
+        <div class="industry-icon">🚛</div>
+        <h3>Logistics companies</h3>
+        <div class="industry-feature">Live Control Tower</div>
+        <div class="industry-feature">Fleet & driver management</div>
+        <div class="industry-feature">Route intelligence</div>
+        <div class="industry-feature">Predictive risk alerts</div>
+        <div class="industry-feature">White-label customer portal</div>
+        <div class="industry-feature">AI Co-pilot</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🏦</div>
+        <h3>Banks & trade finance</h3>
+        <div class="industry-feature">Via Bahati Score™ per operator</div>
+        <div class="industry-feature">Real-time cargo visibility</div>
+        <div class="industry-feature">GLI monthly report</div>
+        <div class="industry-feature">Proof of delivery audit trail</div>
+        <div class="industry-feature">Portfolio corridor monitoring</div>
+        <div class="industry-feature">API integration to credit systems</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🛡️</div>
+        <h3>Insurance</h3>
+        <div class="industry-feature">Dynamic cargo risk pricing</div>
+        <div class="industry-feature">Corridor risk intelligence</div>
+        <div class="industry-feature">Claims intelligence layer</div>
+        <div class="industry-feature">Carrier reliability data</div>
+        <div class="industry-feature">Incident pattern analysis</div>
+        <div class="industry-feature">API access to risk scores</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🏛️</div>
+        <h3>Government & development</h3>
+        <div class="industry-feature">National Logistics Health Index</div>
+        <div class="industry-feature">Trade corridor analysis</div>
+        <div class="industry-feature">Economic flow intelligence</div>
+        <div class="industry-feature">Infrastructure gap identification</div>
+        <div class="industry-feature">GLI policy reports</div>
+        <div class="industry-feature">Development finance alignment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- DATA FLYWHEEL -->
+<section class="flywheel-section">
+  <div class="sec">
+    <div class="sec-tag">The moat</div>
+    <h2>Via Bahati gets smarter with every shipment</h2>
+    <p class="sec-sub" style="margin-bottom:3rem;">Most platforms collect data. Via Bahati learns from it. Every corridor tracked, every carrier ranked, every delay resolved — makes the intelligence more accurate for every participant in the network.</p>
+    <div class="flywheel-diagram">
+      <div class="flywheel-col">
+        <div class="flywheel-node">
+          <h4>Operations data collected</h4>
+          <p>GPS, WhatsApp, driver inputs, ERP feeds, proof of delivery</p>
+        </div>
+        <div class="flywheel-node">
+          <h4>Better decisions made</h4>
+          <p>Logistics companies reroute earlier. Banks fund with confidence. Insurers price accurately.</p>
+        </div>
+      </div>
+      <div class="flywheel-center">
+        <div class="flywheel-center-icon">🔄</div>
+        <div class="flywheel-center-text">Intelligence<br/>Flywheel</div>
+      </div>
+      <div class="flywheel-col">
+        <div class="flywheel-node">
+          <h4>Intelligence generated</h4>
+          <p>Risk scores, corridor rankings, carrier trust, GLI narratives updated in real time</p>
+        </div>
+        <div class="flywheel-node">
+          <h4>Network effect compounds</h4>
+          <p>More operators → richer data → better intelligence → more operators attracted</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ECOSYSTEM -->
+<section class="ecosystem-section">
+  <div class="sec">
+    <div class="sec-tag">The ecosystem</div>
+    <h2>Infrastructure for the entire trade ecosystem</h2>
+    <p class="sec-sub">Via Bahati is not a SaaS tool for one type of user. It is intelligence infrastructure — a layer that every participant in African trade can connect to.</p>
+    <div class="ecosystem-grid">
+      <div class="ecosystem-card">
+        <div class="ecosystem-card-type">Operators</div>
+        <h4>Logistics companies</h4>
+        <p>Manage fleets, track shipments, score carriers, access working capital intelligence.</p>
+      </div>
+      <div class="ecosystem-card">
+        <div class="ecosystem-card-type">Finance</div>
+        <h4>Commercial banks</h4>
+        <p>Assess trade finance applications using real operational data, not just financials.</p>
+      </div>
+      <div class="ecosystem-card">
+        <div class="ecosystem-card-type">Finance</div>
+        <h4>Development finance institutions</h4>
+        <p>Allocate capital to infrastructure gaps identified by corridor intelligence.</p>
+      </div>
+      <div class="ecosystem-card">
+        <div class="ecosystem-card-type">Risk</div>
+        <h4>Cargo insurers</h4>
+        <p>Price risk per route, per carrier, per cargo type — with live intelligence.</p>
+      </div>
+      <div class="ecosystem-card">
+        <div class="ecosystem-card-type">Industry</div>
+        <h4>Manufacturers & distributors</h4>
+        <p>Monitor inbound and outbound freight. Reduce supply chain disruption.</p>
+      </div>
+      <div class="ecosystem-card">
+        <div class="ecosystem-card-type">Public sector</div>
+        <h4>Government agencies</h4>
+        <p>Access the Ghana Logistics Intelligence Index for national trade corridor policy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SECURITY -->
+<section class="security-section">
+  <div class="sec">
+    <div class="sec-tag">Security & trust</div>
+    <h2>Enterprise-grade from day one</h2>
+    <p class="sec-sub">Via Bahati handles shipment data, financial intelligence, and driver information. Security is not a feature — it is the foundation.</p>
+    <div class="security-layers">
+      <div>
+        <div class="security-layer">
+          <div class="security-layer-label">Data layer</div>
+          <h4>Isolation & encryption</h4>
+          <div class="security-check">Row-level security on all 43 database tables</div>
+          <div class="security-check">Tenant isolation — no cross-company data access</div>
+          <div class="security-check">API keys stored as SHA-256 hashes</div>
+          <div class="security-check">Portal passwords hashed with PBKDF2 (100,000 iterations)</div>
+        </div>
+        <div class="security-layer">
+          <div class="security-layer-label">Access layer</div>
+          <h4>Authentication & control</h4>
+          <div class="security-check">Multi-tenant architecture — company-scoped data isolation</div>
+          <div class="security-check">Role-based access control across all modules</div>
+          <div class="security-check">Session management and secure logout</div>
+          <div class="security-check">API route protection — all routes authenticated</div>
+        </div>
+      </div>
+      <div>
+        <div class="security-layer">
+          <div class="security-layer-label">Infrastructure layer</div>
+          <h4>Platform & operations</h4>
+          <div class="security-check">Hosted on Vercel edge infrastructure</div>
+          <div class="security-check">Supabase PostgreSQL with continuous backups</div>
+          <div class="security-check">Twilio webhook HMAC-SHA1 validation</div>
+          <div class="security-check">SSL/TLS on all subdomains via Vercel</div>
+        </div>
+        <div class="security-layer">
+          <div class="security-layer-label">Compliance layer</div>
+          <h4>Audit & visibility</h4>
+          <div class="security-check">Full audit trail on all shipment events</div>
+          <div class="security-check">Proof of delivery with photo verification</div>
+          <div class="security-check">API usage logs per partner</div>
+          <div class="security-check">Service role separation from application queries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="sec">
+    <div class="sec-tag">Pricing</div>
+    <h2>Transparent. Scalable. Ghana-first.</h2>
+    <p class="sec-sub">All plans include the full Via Bahati platform. Upgrade as your operation grows.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price">GHS 500<span>/mo</span></div>
+        <div class="pricing-desc">For small operators beginning their intelligence journey.</div>
+        <div class="pricing-feature">Up to 50 shipments per month</div>
+        <div class="pricing-feature">Live Control Tower</div>
+        <div class="pricing-feature">Route Intelligence</div>
+        <div class="pricing-feature">WhatsApp driver ingestion</div>
+        <div class="pricing-feature">Basic GLI access</div>
+        <div class="pricing-feature">Email support</div>
+        <a href="#demo" class="pricing-cta pricing-cta-outline">Get started</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-popular">Most popular</div>
+        <div class="pricing-plan">Professional</div>
+        <div class="pricing-price">GHS 1,200<span>/mo</span></div>
+        <div class="pricing-desc">For growing operators who need the full intelligence stack.</div>
+        <div class="pricing-feature">Up to 200 shipments per month</div>
+        <div class="pricing-feature">Everything in Starter</div>
+        <div class="pricing-feature">Benchmarking Engine</div>
+        <div class="pricing-feature">Finance Engine + Via Bahati Score™</div>
+        <div class="pricing-feature">White-label customer portal</div>
+        <div class="pricing-feature">Full GLI report monthly</div>
+        <div class="pricing-feature">Priority support</div>
+        <a href="#demo" class="pricing-cta pricing-cta-fill">Get started</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price">GHS 4,500<span>/mo</span></div>
+        <div class="pricing-desc">For large operators and institutions needing full platform access.</div>
+        <div class="pricing-feature">Unlimited shipments</div>
+        <div class="pricing-feature">Everything in Professional</div>
+        <div class="pricing-feature">API Platform access</div>
+        <div class="pricing-feature">Asset Intelligence module</div>
+        <div class="pricing-feature">Automation & Decisions engine</div>
+        <div class="pricing-feature">Sustainability reporting layer</div>
+        <div class="pricing-feature">Dedicated onboarding + SLA</div>
+        <a href="#demo" class="pricing-cta pricing-cta-outline">Contact sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- DEMO -->
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div class="sec-tag" style="text-align:center;">Get in touch</div>
+    <h2>See Via Bahati in action</h2>
+    <p style="color:var(--muted);line-height:1.8;">Whether you're a logistics operator, a bank exploring trade finance intelligence, or an investor — we'd like to show you what we've built. Request a demo, the GLI report, or reach out directly.</p>
+    <div class="demo-form">
+      <div id="form-success" class="form-success">Message sent. We'll be in touch within 24 hours.</div>
+      <form id="contact-form" onsubmit="submitForm(event)">
+        <input type="hidden" name="access_key" value="4ea133ec-593f-4390-9edf-7861ff932075"/>
+        <input type="hidden" name="subject" value="Via Bahati Demo Request"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full name</label>
+            <input type="text" name="name" placeholder="Your name" required/>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="you@company.com" required/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Organisation</label>
+            <input type="text" name="organisation" placeholder="Company or institution"/>
+          </div>
+          <div class="form-group">
+            <label>I represent</label>
+            <select name="type">
+              <option value="">Select one</option>
+              <option>Logistics operator</option>
+              <option>Bank / trade finance institution</option>
+              <option>Insurance company</option>
+              <option>Government / development institution</option>
+              <option>Investor</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What would you like</label>
+          <select name="request">
+            <option value="">Select one</option>
+            <option>Platform demo</option>
+            <option>June 2026 GLI report</option>
+            <option>Pricing discussion</option>
+            <option>Investment conversation</option>
+            <option>Partnership discussion</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="message" placeholder="Tell us about your operation or what you'd like to know."></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="form-btn">Send message →</button>
+      </form>
+    </div>
+    <div style="margin-top:2.5rem;display:flex;justify-content:center;gap:3rem;font-size:0.85rem;color:var(--muted);">
+      <div>✉ <a href="mailto:bright@vestigelogisticsgh.com" style="color:var(--green);text-decoration:none;">bright@vestigelogisticsgh.com</a></div>
+      <div>🌐 <a href="https://viabahati.app" style="color:var(--green);text-decoration:none;">viabahati.app</a></div>
+      <div>📍 Accra, Ghana</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+        <div class="logo-mark" style="width:28px;height:28px;">
+          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;">
+            <path d="M9 2L15.5 6V12L9 16L2.5 12V6L9 2Z" fill="#000"/>
+            <path d="M9 5L12.5 7.5V12.5L9 15L5.5 12.5V7.5L9 5Z" fill="#00C47E"/>
+          </svg>
+        </div>
+        <span style="font-weight:700;color:#fff;">VIA BAHATI</span>
+      </div>
+      <p>Africa's Logistics Intelligence Infrastructure. Transforming fragmented logistics data into real-time intelligence for operators, financiers, and governments across Africa.</p>
+      <p style="margin-top:0.75rem;font-size:0.78rem;">© 2026 Vestige Logistics Gh Ltd · Accra, Ghana</p>
+    </div>
+    <div class="footer-col">
+      <h5>Platform</h5>
+      <a href="https://viabahati.app/login">Sign in</a>
+      <a href="#platform">Modules</a>
+      <a href="#gli">GLI Report</a>
+      <a href="#score">Via Bahati Score™</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="footer-col">
+      <h5>Industries</h5>
+      <a href="#industries">Logistics operators</a>
+      <a href="#industries">Banks & trade finance</a>
+      <a href="#industries">Insurance</a>
+      <a href="#industries">Government</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="#demo">Contact</a>
+      <a href="#demo">Request demo</a>
+      <a href="mailto:bright@vestigelogisticsgh.com">Email us</a>
+      <a href="https://linkedin.com/company/122653989">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Via Bahati · Vestige Logistics Gh Ltd · Accra, Ghana</span>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="https://viabahati.app/login">Platform login</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const screens = {
+  dashboard:{id:'screen-dashboard',url:'viabahati.app · Operations Overview'},
+  tower:{id:'screen-tower',url:'viabahati.app · Live Control Tower'},
+  shipment:{id:'screen-shipment',url:'viabahati.app · KW-001 Shipment 360°'},
+  gli:{id:'screen-gli',url:'viabahati.app · Ghana Logistics Intelligence Index'},
+  finance:{id:'screen-finance',url:'viabahati.app · Finance Engine'},
+  portal:{id:'screen-portal',url:'northern-haulage.viabahati.app · Customer Portal'}
+};
+function showScreen(key,btn){
+  Object.values(screens).forEach(s=>document.getElementById(s.id).style.display='none');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(screens[key].id).style.display='block';
+  document.getElementById('screenshot-url').textContent=screens[key].url;
+  btn.classList.add('active');
+}
+async function submitForm(e){
+  e.preventDefault();
+  const btn=document.getElementById('form-btn');
+  btn.textContent='Sending...';btn.disabled=true;
+  try{
+    const res=await fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(e.target)});
+    const d=await res.json();
+    if(d.success){e.target.style.display='none';document.getElementById('form-success').style.display='block';}
+    else{btn.textContent='Send message →';btn.disabled=false;}
+  }catch{btn.textContent='Send message →';btn.disabled=false;}
+}
+</script>
+</body>
+</html>
