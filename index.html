@@ -87,6 +87,14 @@ nav{position:fixed;top:32px;left:0;right:0;z-index:100;padding:0 5%;}
 .logo-mark svg{width:18px;height:18px;}
 .logo-text{font-weight:700;font-size:0.95rem;letter-spacing:0.04em;color:#fff;}
 .logo-sub{font-size:0.65rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:0.5rem}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all 0.2s}
+#mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(10,15,30,0.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:1rem;z-index:99;flex-direction:column;gap:0.25rem}
+#mobile-menu.open{display:flex}
+#mobile-menu a{color:var(--muted);text-decoration:none;font-size:15px;padding:0.75rem 1rem;border-radius:8px;transition:all 0.2s}
+#mobile-menu a:hover{color:var(--text);background:rgba(255,255,255,0.06)}
+#mobile-menu .mobile-cta{background:var(--green);color:var(--navy)!important;font-weight:600;margin-top:0.5rem;text-align:center}
+@media(max-width:900px){.nav-hamburger{display:flex}}
 .nav-links{display:flex;align-items:center;gap:1.75rem;}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s;}
 .nav-links a:hover{color:#fff;}
@@ -349,7 +357,19 @@ footer{background:var(--bg3);border-top:1px solid var(--border);padding:4rem 5% 
       <a href="#demo" class="nav-cta">Request Demo</a>
     </div>
   </div>
+  <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div id="mobile-menu">
+  <a href="#" onclick="showPage('home');toggleMobileMenu()">Home</a>
+  <a href="#" onclick="showPage('platform');toggleMobileMenu()">Platform</a>
+  <a href="#" onclick="showPage('solutions');toggleMobileMenu()">Solutions</a>
+  <a href="#" onclick="showPage('insights');toggleMobileMenu()">Insights</a>
+  <a href="#" onclick="showPage('pricing');toggleMobileMenu()">Pricing</a>
+  <a href="#" onclick="showPage('company');toggleMobileMenu()">Company</a>
+  <a href="#" onclick="showPage('contact');toggleMobileMenu()" class="mobile-cta">Request Demo</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
